@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Covsax</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+  </head>
+  <body style="background-color: #EFEFEF">
+    <h1>CovSax</h1>
+    <h2>Buchungshilfe für Corona Impftermin in Sachsen</h2>
+    2021-04 Peter Ramm, OSP Dresden
+    <br/> <br/>
+    <%= form_tag('/lookup_for_appointment') do -%>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+      <table width="100%">
+        <tr>
+          <td width="20%"><%= label_tag(:link_url, 'Link URL aus EMail') %></td>
+          <td><%= text_field_tag(:link_url, @link_url, style: 'width: 95%')%></td>
+        </tr>
+        <tr>
+          <td width="20%"><%= label_tag(:password, 'Passwort für Link') %></td>
+          <td><%= password_field_tag(:password, @password, style: 'width: 95%')%></td>
+        </tr>
+        <tr>
+          <td width="20%"><%= label_tag(:max_minutes, 'Max. Suchzeit in Minuten') %></td>
+          <td><%= text_field_tag(:max_minutes, @max_minutes, style: "text-align: right")%></td>
+        </tr>
+        <tr>
+          <td width="20%"><%= label_tag(:cycle_minutes, 'Zeit zwischen Versuchen in Minuten') %></td>
+          <td><%= text_field_tag(:cycle_minutes, @cycle_minutes, style: "text-align: right")%></td>
+        </tr>
+        <% 1.upto(10) do |ic| %>
+          <tr>
+            <td>Impfcenter <%= ic %></td>
+            <td>
+              <select name="impfcenter_<%= ic %>">
+                <option>[KEINES]</option>
+                <% CovsaxController::ALL_IMPFCENTERS.each do |impfcenter| %>
+                  <option <%= "selected" if !@impfcenters[ic].nil? && @impfcenters[ic] == impfcenter %>><%= impfcenter %></option>
+                <% end %>
+              </select>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <br/><br/>
+      <%= submit_tag('Termine suchen', onclick: "document.querySelector('#result').innerHTML = 'Suche nach verfügbarem Termin beginnt jetzt.<br/>Nächste Aktivität erst wenn Termin gefunden oder Zeit abgelaufen.';") %>
+    <% end -%>
+    <br/><br/>
+    <div id="result">
+      <%= yield %>
+    </div>
+  </body>
+</html>
