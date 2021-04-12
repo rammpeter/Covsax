@@ -20,6 +20,6 @@ Buchungshilfe für Corona Impftermin in Sachsen
 - Button "Termin suchen" drücken 
 - Der Request des Browsers bleibt aktiv bis entweder ein Termin gefunden wurde oder die max. Suchzeit abgelaufen ist
 
-Die Aktivitäten auf der Webseite der Impfterminvergabe werden in einem separaten Chrome-Browser ausgeführt und können visuell verfolgt werden.
+Die Aktivitäten auf der Webseite der Impfterminvergabe werden in einem separaten Fenster des Chrome-Browser ausgeführt und können visuell verfolgt werden.
 
 Wenn ein auswählbarer Termin gefunden wurde, bleibt das Chrome-Fenster offen, es ertönt ein Beep und die Buchung des Termins kann dann manuell abgeschlossen werden.
