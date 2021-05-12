@@ -58,7 +58,7 @@ class CovsaxController < ApplicationController
         if page.has_content?('Aufgrund der vielen Anfragen')
           Rails.logger.debug "Seite überlastet, Ende des Versuchs"
         else
-          if page.has_content?('Zugangsdaten')
+          if page.has_content?('Zugang')
             find_field(type: 'password').set(@password)
             find_button('Weiter').click
             wait_for_content_successful 'Bitte geben Sie an, wie Sie fortfahren möchten'
@@ -78,6 +78,7 @@ class CovsaxController < ApplicationController
             end
           else
             sleep 10                                                            # Allow recognition of page
+            page.save_screenshot('zugang.png', full: true)
             raise "Seite zeigt weder Zugangsdaten noch überlastet"
           end
         end
@@ -93,6 +94,7 @@ class CovsaxController < ApplicationController
       end
 
       sleep(2)
+      page&.save_screenshot('exception.png', full: true)
       page&.quit
       @message = "<span style='background-color: lightyellow; color:red'>Fehler: #{e.message}</span>".html_safe
     ensure
