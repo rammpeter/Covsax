@@ -78,7 +78,7 @@ class CovsaxController < ApplicationController
             end
           else
             sleep 10                                                            # Allow recognition of page
-            page.save_screenshot('zugang.png', full: true)
+            page.save_screenshot('/tmp/zugang.png', full: true)
             raise "Seite zeigt weder Zugangsdaten noch überlastet"
           end
         end
@@ -94,7 +94,7 @@ class CovsaxController < ApplicationController
       end
 
       sleep(2)
-      page&.save_screenshot('exception.png', full: true)
+      page&.save_screenshot('/tmp/exception.png', full: true)
       page&.quit
       @message = "<span style='background-color: lightyellow; color:red'>Fehler: #{e.message}</span>".html_safe
     ensure
@@ -116,12 +116,15 @@ class CovsaxController < ApplicationController
     search_fields[0].native.send_keys(:return)
     find_button('Weiter').click
     wait_for_content_successful 'Termin'
-    if page.has_content? 'wir Ihnen leider keinen Termin anbieten'
+    sleep 2                                                                     # Evtl. ist "Termin" bereits in vorheriger Seite enthalten
+    if page.has_content? 'wir Ihnen leider'                                     # "keinen Termin" steht erst nach Linefeed
       sleep(2)
+      page&.save_screenshot('/tmp/keinen_termin_gefunden.png', full: true)
       find_button('Zurück').click
       Rails.logger.debug "Kein Termin gefunden für #{impfcenter}"
       false
     else
+      page&.save_screenshot('/tmp/termin_gefunden.png', full: true)
       Rails.logger.debug "Termin gefunden für #{impfcenter}"
       true
     end
